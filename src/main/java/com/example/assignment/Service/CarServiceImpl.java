@@ -27,7 +27,6 @@ public class CarServiceImpl implements CarService {
             throw new CarNotFound("Invalid Id","404");
         }
         CarDTO carDTO =modelMapper.map(car.get(),CarDTO.class);
-//        CarDTO carDTO =this.modelMapper.map(carRepo.findById(id).get(),CarDTO.class);
         return carDTO;
     }
 

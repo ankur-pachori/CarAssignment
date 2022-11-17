@@ -1,9 +1,6 @@
 package com.example.assignment.Controller;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.mockito.ArgumentMatchers.any;
 
@@ -12,11 +9,9 @@ import com.example.assignment.Model.Car;
 import com.example.assignment.Model.ConditionOfCar;
 import com.example.assignment.Model.FuelType;
 import com.example.assignment.Repo.CarRepo;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
-import org.mockito.Mock;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
@@ -28,7 +23,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 
 @SpringBootTest
@@ -84,7 +78,7 @@ class CarControllerTest {
         carDTO.getDetails().setMileage("2000");
         carDTO.getDetails().setExternalColor("Red");
         Mockito.when(repo.save(any(Car.class))).thenReturn(modelMapper.map(carDTO,Car.class));
-//        Mockito.when(repo.save(any(Car.class))).thenReturn();
+
         String json = objectMapper.writeValueAsString(updateCar);
         MvcResult i = this.mockMvc.perform(put("/car/1")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -145,7 +139,7 @@ class CarControllerTest {
         assertThat(carDTOCheck.getDetails().getManufacturer().equals(getCarDTO().getDetails().getManufacturer())).isTrue();
 
         Mockito.when(repo.findById(any(Long.class))).thenReturn(car.empty());
-        i = this.mockMvc.perform(get("/car/2"))
+        i = this.mockMvc.perform(delete("/car/2"))
                 .andExpect(status().is4xxClientError())
                 .andReturn();
     }
