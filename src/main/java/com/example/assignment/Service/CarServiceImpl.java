@@ -6,10 +6,11 @@ import com.example.assignment.Model.Car;
 import com.example.assignment.Repo.CarRepo;
 import com.example.assignment.advice.CarNotFound;
 import com.example.assignment.advice.FieldsEmptyException;
-import com.sun.javafx.iio.gif.GIFImageLoaderFactory;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class CarServiceImpl implements CarService {
@@ -21,16 +22,19 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public CarDTO getCar(Long id) {
-        if (!carRepo.findById(id).isPresent()){
+        Optional<Car> car=carRepo.findById(id);
+        if (!car.isPresent()){
             throw new CarNotFound("Invalid Id","404");
         }
-        CarDTO carDTO =this.modelMapper.map(carRepo.findById(id).get(),CarDTO.class);
+        CarDTO carDTO =modelMapper.map(car.get(),CarDTO.class);
+//        CarDTO carDTO =this.modelMapper.map(carRepo.findById(id).get(),CarDTO.class);
         return carDTO;
     }
 
     @Override
     public CarDTO updateCar(Long id, UpdateCar updateCar) {
-        if (!carRepo.findById(id).isPresent()){
+        Optional<Car> car = carRepo.findById(id);
+        if (!car.isPresent()){
             throw new CarNotFound("Invalid Id","404");
         }
         CarDTO carDTO=modelMapper.map(carRepo.findById(id).get(),CarDTO.class);
@@ -63,12 +67,12 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public CarDTO deleteRecord(Long id) {
-        if (!carRepo.findById(id).isPresent()){
+        Optional<Car> car=carRepo.findById(id);
+        if (!car.isPresent()){
             throw new CarNotFound("Invalid Id","404");
         }
-        Car car =carRepo.findById(id).get();
         carRepo.deleteById(id);
-        CarDTO carDTO = this.modelMapper.map(car,CarDTO.class);
+        CarDTO carDTO = this.modelMapper.map(car.get(),CarDTO.class);
         return carDTO;
     }
 
